@@ -1,0 +1,6 @@
+[book]
+authors = ["lzzsG"]
+language = "en"
+multilingual = true
+src = "src"
+title = "test-mdbook"
