@@ -18,7 +18,7 @@ $ git clone /mit/6.175/groups/${PERSON1}_${PERSON2}/project-part-1.git project-p
 
 It only makes sense to implement a store queue for the data cache, but we want to keep the design of the instruction cache (the I$) the same as the one from Lab 7. Therefore, we'll need to separate the design of the data cache and instruction cache. `src/includes/CacheTypes.bsv` contains the new cache interfaces, even though they look identical:
 
-```
+```rust
 interface ICache;
   method Action req(Addr a);
   method ActionValue#(MemResp) resp;
@@ -85,7 +85,7 @@ Now, we'll add a store queue to the D$.
 
 We have provided a parametrized implementation of an *n*-entry store queue in `src/includes/StQ.bsv`. The type of each store queue entry is just the `MemReq` type, and the interface is:
 
-```
+```rust
 typedef MemReq StQEntry;
 interface StQ#(numeric type n);
   method Action enq(StQEntry e);

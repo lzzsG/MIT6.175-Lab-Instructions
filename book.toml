@@ -3,4 +3,11 @@ authors = ["lzzsG"]
 language = "en"
 multilingual = true
 src = "src"
-title = "test-mdbook"
+title = "mit6.175-labs-instruction"
+
+[output.html]
+default-theme = "black"
+mathjax-support = true
+preferred-dark-theme = "black"
+git-repository-url = "https://github.com/lzzsG/mit6.175-labs-instruction"
+git-repository-icon = "fa-github"

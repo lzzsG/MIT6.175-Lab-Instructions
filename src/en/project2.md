@@ -20,7 +20,7 @@ The message FIFO transfers both request and response messages. For a message FIF
 
 The message types transferred by the message FIFO is defined in `src/includes/CacheTypes.bsv` as follow:
 
-```
+```rust
 typedef struct {
   CoreID            child;
   Addr              addr;
@@ -46,7 +46,7 @@ typedef union tagged {
 
 The interface of message FIFO is also defined in `CacheTypes.bsv`:
 
-```
+```rust
 interface MessageFifo#(numeric type n);
   method Action enq_resp(CacheMemResp d);
   method Action enq_req(CacheMemReq d);
@@ -251,7 +251,7 @@ The trace of the requests sent to D cache `i` can be found in `driver_<i>_trace.
 
 We can compile the test programs using the following commands:
 
-```
+```shell
 $ cd programs/assembly
 $ make
 $ cd ../benchmarks

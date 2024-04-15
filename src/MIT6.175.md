@@ -24,6 +24,10 @@
 
 ---
 
+<a href=""><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Flzzs.fun%2Fmit6.175-labs-instruction%2F&count_bg=%23BBBBBB&title_bg=%23222222&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>   中文总字数: 48261  暂未校对
+
+---
+
 # 原文
 
 # Lab Assignments

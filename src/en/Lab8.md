@@ -111,13 +111,3 @@ Remember to commit your code and `git push` when you're done.
 ------
 
 © 2016 [Massachusetts Institute of Technology](http://web.mit.edu/). All rights reserved.
-
-
-
-
-
-
-
-
-
-请输入需要翻译的文本。
