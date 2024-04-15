@@ -1,6 +1,6 @@
 # 实验 3: 快速傅里叶变换管道
 
-> **实验 3 截止日期：** 2016年10月5日星期三，晚上11:59:59 EDT。
+> **实验 3 截止日期**： 2016年10月5日星期三，晚上11:59:59 EDT。
 >
 > 实验 3 的交付内容包括：
 >
@@ -19,7 +19,7 @@
 
 方法上的守卫语法如下所示：
 
-```rust
+```haskell
 method Action myMethodName(Bit#(8) in) if (myGuardExpression);
     // 方法体
 endmethod
@@ -27,7 +27,7 @@ endmethod
 
 `myGuardExpression` 是一个表达式，当且仅当调用 `myMethodName` 有效时才为 `True`。如果 `myMethodName` 将在下次触发时在规则中使用，那么规则将被阻止执行，直到 `myGuardExpression` 为 `True`。
 
-> **练习 1（5 分）：** 作为热身，为包含在 `Fifo.bsv` 中的两元素无冲突 FIFO 的 `enq`、`deq` 和 `first` 方法添加守卫。
+> **练习 1（5 分）**： 作为热身，为包含在 `Fifo.bsv` 中的两元素无冲突 FIFO 的 `enq`、`deq` 和 `first` 方法添加守卫。
 
 ## 数据类型
 
@@ -41,7 +41,7 @@ endmethod
 
 模块 `mkBfly4` 实现了讲座中讨论的 4 路蝴蝶函数。这个模块应该完全按照你在代码中使用的次数来实例化。
 
-```rust
+```haskell
 interface Bfly4;
     method Vector#(4,ComplexData) bfly4(Vector#(4,ComplexData) t, Vector#(4,ComplexData) x);
 endinterface
@@ -57,7 +57,7 @@ endmodule
 
 你将实现与以下 FFT 接口对应的模块：
 
-```rust
+```haskell
 interface Fft;
     method Action enq(Vector#(FftPoints, ComplexData) in);
     method ActionValue#(Vector#(FftPoints, ComplexData)) deq();
@@ -68,7 +68,7 @@ endinterface
 
 每个模块都包含两个 FIFO，`inFifo` 和 `outFifo`，分别包含输入复数向量和输出复数向量，如下所示。
 
-```rust
+```haskell
 module mkFftCombinational(Fft);
     Fifo#(2, Vector#(FftPoints, ComplexData)) inFifo <- mkCFFifo;
     Fifo#(2, Vector#(FftPoints, ComplexData)) outFifo <- mkCFFifo;
@@ -79,13 +79,13 @@ module mkFftCombinational(Fft);
 
 每个模块还包含一个或多个 `mkBfly4` 的 `Vector`，如下所示。
 
-```rust
+```haskell
 Vector#(3, Vector#(16, Bfly4)) bfly <- replicateM(mkBfly4);
 ```
 
 `doFft` 规则应该从 `inFifo` 中取出一个输入，执行 FFT 算法，最后将结果入队到 `outFifo`。这个规则通常需要其他函数和模块才能正确运作。弹性流水线实现将需要多个规则。
 
-```rust
+```haskell
    ...
     rule doFft;
         // 规则体
@@ -95,7 +95,7 @@ Vector#(3, Vector#(16, Bfly4)) bfly <- replicateM(mkBfly4);
 
 `Fft` 接口提供了方法向 FFT 模块发送数据并从中接收数据。该接口只入队到 `inFifo` 并从 `outFifo` 出队。
 
-```rust
+```haskell
    ...
     method Action enq(Vector#(FftPoints, ComplexData) in);
         inFifo.enq(in);
@@ -108,7 +108,7 @@ Vector#(3, Vector#(16, Bfly4)) bfly <- replicateM(mkBfly4);
 endmodule 
 ```
 
-> **练习 2（5 分）：** 在 `mkFftFolded` 中，创建一个折叠的 FFT 实现，总共只使用 16 个蝴蝶单元。这个实现应该在恰好 3 个周期内完成整个 FFT 算法（从出队输入 FIFO 到入队输出 FIFO）。
+> **练习 2（5 分）**： 在 `mkFftFolded` 中，创建一个折叠的 FFT 实现，总共只使用 16 个蝴蝶单元。这个实现应该在恰好 3 个周期内完成整个 FFT 算法（从出队输入 FIFO 到入队输出 FIFO）。
 >
 > Makefile 可用于构建 `simFold` 来测试此实现。编译并运行使用
 >
@@ -117,7 +117,7 @@ endmodule
 > $ ./simFold
 > ```
 
-> **练习 3（5 分）：** 在 `mkFftInelasticPipeline` 中，创建一个非弹性流水线 FFT 实现。这个实现应该使用 48 个蝴蝶单元和 2 个大型寄存器，
+> **练习 3（5 分）**： 在 `mkFftInelasticPipeline` 中，创建一个非弹性流水线 FFT 实现。这个实现应该使用 48 个蝴蝶单元和 2 个大型寄存器，
 
 每个寄存器携带 64 个复数。这个流水线单元的延迟也必须恰好是 3 个周期，尽管其吞吐量将是每个周期 1 个 FFT 操作。
 >
@@ -128,7 +128,7 @@ endmodule
 >$ ./simInelastic
 >```
 
-> **练习 4（10 分）：**
+> **练习 4（10 分）**：
 >
 > 在 `mkFftElasticPipeline` 中，创建一个弹性流水线 FFT 实现。这个实现应该使用 48 个蝴蝶单元和两个大型 FIFO。FIFO 之间的阶段应该在它们自己的规则中，这些规则可以独立触发。这个流水线单元的延迟也必须恰好是 3 个周期，尽管其吞吐量将是每个周期 1 个 FFT 操作。
 >
@@ -143,14 +143,14 @@ endmodule
 
 在实验室存储库提供的文本文件 `discussion.txt` 中写下你对这些问题的回答。
 
-> **讨论问题 1 和 2：**
+> **讨论问题 1 和 2**：
 >
 > 假设你被给予一个执行 10 阶段算法的黑盒模块。你不能查看它的内部实现，但你可以通过给它数据并查看模块的输出来测试这个模块。你被告知它是按照本实验中涵盖的结构之一实现的，但你不知道是哪一个。
 >
 > 1. 你如何判断模块的实现是折叠实现还是流水线实现？ **（3 分）**
 > 2. 一旦你知道模块具有流水线结构，你如何判断它是非弹性的还是弹性的？ **（2 分）**
 
-> **讨论问题 3（可选）：** 你花了多长时间来完成这个实验？
+> **讨论问题 3（可选）**： 你花了多长时间来完成这个实验？
 
 当你完成所有练习并且代码工作正常时，提交你的更改到仓库，并将你的更改推送回源。
 
@@ -158,7 +158,7 @@ endmodule
 
 作为额外的挑战，实现讲座中最后几张可选幻灯片中介绍的多态超折叠 FFT 模块。这个超折叠 FFT 模块在给定有限数量的蝴蝶单元（1、2、4、8 或 16 个蝴蝶单元）的情况下执行 FFT 操作。蝴蝶单元数量的参数由 `radix` 给出。由于 `radix` 是一个类型变量，我们必须在模块的接口中引入它，因此我们定义了一个名为 `SuperFoldedFft` 的新接口，如下所示：
 
-```rust
+```haskell
 interface SuperFoldedFft#(radix);
     method Action enq(Vector#(64, ComplexData inVec));
     method ActionValue#(Vector#(64, ComplexData)) deq;
@@ -174,8 +174,8 @@ endinterface
 Makefile 可用于构建 `simSfol` 来测试此实现。编译并运行使用
 
 ```
-$ make sfol
-$ ./simSfol
+make sfol
+./simSfol
 ```
 
 为了做超折叠 FFT 模块，首先尝试编写一个只有 2 个蝴蝶单元的超折叠 FFT 模块，没有任何类型参数。然后尝试推广设计以使用任意数量的蝴蝶单元。

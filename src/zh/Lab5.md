@@ -61,12 +61,12 @@ SceMiLayer 和 Bridge 的源代码位于 `scemi/` 目录中。SceMi 链接在仿
 文件 `scemi/sim/project.bld` 描述了如何使用 `build` 命令构建项目，该命令是 Bluespec 安装的一部分。运行
 
 ```
-$ build --doc
+build --doc
 ```
 
 以获取有关 `build` 命令的更多信息。可以通过在 `scemi/sim/` 目录中运行以下命令从头开始重新构建整个项目，其中 `<proc_name>` 是本实验指南中指定的处理器名称之一。这将覆盖之前通过 `build` 调用生成的可执行文件。
 
-> **旁注：**单独运行 `build -v` 会打印一个错误消息，其中包含所有有效的处理器名称。
+> **旁注**：单独运行 `build -v` 会打印一个错误消息，其中包含所有有效的处理器名称。
 
 ### 编译汇编测试和基准测试
 
@@ -146,16 +146,16 @@ FAILED exit code = <failure code>
 
 我们的 SceMi 测试台是在宿主处理器上运行的软件，通过 SceMi 链接与 RISC-V 处理器交互，如图 1 所示。测试台启动处理器并处理 `toHost` 请求，直到处理器表明已成功或未成功完成。例如，测试输出中的周期计数实际上是处理器发出的 `toHost` 请求，请求打印一个整数，测试台通过打印该整数来处理这些请求。测试输出的最后一行（即 `PASSED` 或 `FAILED`）也是由测试台根据指示处理完成的 `toHost` 请求打印出来的。
 
-要运行测试台，请首先按照[构建项目](http://csg.csail.mit.edu
+要运行测试台，请首先按照[构建项目](<http://csg.csail.mit.edu>
 
 /6.175/archive/2016/labs/lab5-riscv-intro.html#build)中的描述构建项目，并按照[编译汇编测试和基准测试](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab5-riscv-intro.html#prog)中的描述编译 RISC-V 程序。对于仿真，将创建可执行文件 `bsim_dut`，在启动测试台时应运行此文件。在仿真中，我们的 RISC-V 处理器总是加载文件 `scemi/sim/mem.vmh` 来初始化（数据）内存。因此，我们只需要复制我们想要运行的测试程序的 .vmh 文件（对应于指令内存）即可。
 
 例如，要在仿真中在处理器上运行中值基准测试，你可以在 `scemi/sim` 目录下使用以下命令：
 
 ```
-$ cp ../../programs/build/benchmarks/vmh/median.riscv.vmh mem.vmh
-$ ./bsim_dut > median.out &
-$ ./tb
+cp ../../programs/build/benchmarks/vmh/median.riscv.vmh mem.vmh
+./bsim_dut > median.out &
+./tb
 ```
 
 为方便起见，我们在 `scemi/sim` 目录中提供了脚本 `run_asm.sh` 和 `run_bmarks.sh`，分别运行所有汇编测试和基准测试。`bsim_dut` 的标准输出（stdout）将重定向到 `logs/<test name>.log` 文件。
@@ -168,7 +168,7 @@ BSV `$display` 语句由 `bsim_dut` 打印到 stdout。BSV 还可以使用 `$fwr
 
 RISC-V 打印语句（例如，`programs/benchmarks/common/syscall.c` 中的 `printChar`、`printStr` 和 `printInt` 函数）通过将字符和整数移至 `mtohost` CSR 来处理。测试台从 `cpuToHost` 接口读取，并在接收到字符和整数时将它们打印到 stderr。
 
-> **练习 0（0 分）：** 通过转到 `programs/assembly` 和 `programs/benchmarks` 目录并运行 `make` 编译测试程序。在 `scemi/sim` 目录中编译单周期 RISC-V 实现并通过以下命令测试它：
+> **练习 0（0 分）**： 通过转到 `programs/assembly` 和 `programs/benchmarks` 目录并运行 `make` 编译测试程序。在 `scemi/sim` 目录中编译单周期 RISC-V 实现并通过以下命令测试它：
 >
 > ```
 > $ build -v onecycle
@@ -178,7 +178,7 @@ RISC-V 打印语句（例如，`programs/benchmarks/common/syscall.c` 中的 `pr
 >
 > 在编译 BSV 代码（即 `build -v onecycle`）期间，你可能会看到许多警告，出现在 "code generation for mkBridge starts" 之后。这些警告针对的是 SceMi 基础设施，通常你不需要关心它们。
 
-> **实用提示：** 在 `scemi/sim` 目录中运行
+> **实用提示**： 在 `scemi/sim` 目录中运行
 >
 > ```
 > $ ./clean
@@ -206,7 +206,7 @@ tee: ./onecycle_compile_for_bluesim.log: Connection timed out
 录：
 
 ```
-$ mkdir /tmp/<your_user_name>-lab5
+mkdir /tmp/<your_user_name>-lab5
 ```
 
 然后，打开 `scemi/sim/project.bld`，你会发现以下行：
@@ -250,7 +250,7 @@ info-directory:         /tmp/alice-lab5/info_dut
 
 创建两周期实现时，你将需要一个寄存器来在两个阶段间保持中间数据，以及一个状态寄存器来跟踪当前状态。中间数据寄存器将在指令取取期间被写入，在执行期间被读取。状态寄存器将在指令取取和执行之间切换。为了简化操作，你可以使用提供的 `Stage` 类型定义作为状态寄存器的类型。
 
-> **练习 1（15 分）：** 在 `TwoCycle.bsv` 中实现一个两周期 RISC-V 处理器，使用单一内存来存储指令和数据。已为你提供了单一内存模块 `mem` 供使用。通过转到 `scemi/sim` 目录并使用以下命令测试此处理器：
+> **练习 1（15 分）**： 在 `TwoCycle.bsv` 中实现一个两周期 RISC-V 处理器，使用单一内存来存储指令和数据。已为你提供了单一内存模块 `mem` 供使用。通过转到 `scemi/sim` 目录并使用以下命令测试此处理器：
 >
 > ```
 > $ build -v twocycle
@@ -259,8 +259,6 @@ info-directory:         /tmp/alice-lab5/info_dut
 > ```
 
 ### 四周期 RISC-V 实现，支持内存延迟
-
-
 
 一周期和两周期 RISC-V 处理器假设内存具有组合读取功能；即如果你设置读取地址，那么读取的数据将在同一时钟周期内有效。大多数内存的读取具有更长的延迟：首先你设置地址位，然后在下一个时钟周期中读取结果才准备好。如果我们将之前 RISC-V 处理器实现中的内存更改为具有读取延迟的内存，那么我们将引入另一个结构危害：读取的结果不能在执行读取的同一周期中使用。这种结构危害可以通过将处理器进一步分成四个周期来避免：*指令取取*、*指令解码*、*执行* 和 *写回*。
 
@@ -273,7 +271,7 @@ info-directory:         /tmp/alice-lab5/info_dut
 
 由 `mkDelayedMemory` 实现的一周期读取延迟内存。此模块具有一个接口 `DelayedMemory`，该接口将内存请求和内存响应分离。请求仍以使用 `req` 方法的相同方式进行，但此方法不再同时返回响应。为了获取上一次读取请求的结果，你必须在稍后的时钟周期中调用 `resp` 动作值方法。存储请求不会生成任何响应，因此你不应为存储调用 `resp` 方法。更多细节可以在 `src/includes` 中的源文件 `DelayedMemory.bsv` 中找到。
 
-> **练习 2（15 分）：**
+> **练习 2（15 分）**：
 >
 > 如上所述，在 `FourCycle.bsv` 中实现一个四周期 RISC-V 处理器。使用已包含在 `FourCycle.bsv` 中的延迟内存模块 `mem` 作为指令和数据内存。使用以下命令测试此处理器：
 >
@@ -293,7 +291,7 @@ info-directory:         /tmp/alice-lab5/info_dut
 
 时纠正 PC。`ExecInst` 的 `mispredict` 字段在此处将非常有用。
 
-> **练习 3（30 分）：**
+> **练习 3（30 分）**：
 >
 > 在 `TwoStage.bsv` 中实现一个两周期流水线 RISC-V 处理器，使用独立的指令和数据内存（具有组合读取功能，就像 `OneCycle.bsv` 中的内存一样）。你可以实现非弹性或弹性流水线。使用以下命令测试此处理器：
 >
@@ -309,9 +307,9 @@ info-directory:         /tmp/alice-lab5/info_dut
 
 流水线实现的处理器将实现 0.5 到 1.0 IPC 之间的某处。分支错误预测会降低处理器的 IPC，因此你的 PC+4 下一地址预测器的准确性对于拥有高 IPC 的处理器至关重要。
 
-> **讨论问题 1（5 分）：** 对于 `run_bmarks.sh` 脚本测试的每个基准测试，两阶段流水线处理器的 IPC 是多少？
+> **讨论问题 1（5 分）**： 对于 `run_bmarks.sh` 脚本测试的每个基准测试，两阶段流水线处理器的 IPC 是多少？
 
-> **讨论问题 2（5 分）：** 从 IPC 计算下一地址预测器准确性的公式是什么？（提示，当 PC+4 预测正确时，执行一条指令需要多少周期？当预测错误时呢？）使用这个公式，每个基准测试的 PC+4 下一地址预测器的准确性是多少？
+> **讨论问题 2（5 分）**： 从 IPC 计算下一地址预测器准确性的公式是什么？（提示，当 PC+4 预测正确时，执行一条指令需要多少周期？当预测错误时呢？）使用这个公式，每个基准测试的 PC+4 下一地址预测器的准确性是多少？
 
 ### 下一地址预测
 
@@ -325,7 +323,7 @@ info-directory:         /tmp/alice-lab5/info_dut
 
 测，或者我们可以在执行阶段检查指令类型以得出下一 PC。
 
-> **练习 4（10 分）：** 在 `TwoStageBTB.bsv` 中，为你的两周期流水线 RISC-V 处理器添加一个 BTB。BTB 模块已在给定代码中实例化。使用以下命令测试此处理器：
+> **练习 4（10 分）**： 在 `TwoStageBTB.bsv` 中，为你的两周期流水线 RISC-V 处理器添加一个 BTB。BTB 模块已在给定代码中实例化。使用以下命令测试此处理器：
 >
 > ```
 > $ build -v twostagebtb
@@ -333,19 +331,19 @@ info-directory:         /tmp/alice-lab5/info_dut
 > $ ./run_bmarks.sh
 > ```
 
-> **讨论问题 3（5 分）：** 使用 BTB 的两阶段流水线处理器的 IPC 是多少，对于 `run_bmarks.sh` 脚本测试的每个基准测试而言，它有多大改进？
+> **讨论问题 3（5 分）**： 使用 BTB 的两阶段流水线处理器的 IPC 是多少，对于 `run_bmarks.sh` 脚本测试的每个基准测试而言，它有多大改进？
 
-> **讨论问题 4（5 分）：** 添加 BTB 如何改变 `bpred_*` 微基准测试的性能？（提示：`bpred_j` 的周期数应该减少。）
+> **讨论问题 4（5 分）**： 添加 BTB 如何改变 `bpred_*` 微基准测试的性能？（提示：`bpred_j` 的周期数应该减少。）
 
-> **讨论问题 5（可选）：** 完成这个实验你花了多长时间？
+> **讨论问题 5（可选）**： 完成这个实验你花了多长时间？
 
 完成后记得使用 `git push` 推送你的代码。
 
 ### 额外讨论问题
 
-> **讨论问题 6（5 额外分）：** 查看 `bpred_*` 基准测试的汇编源代码并解释为什么每个基准测试改进、保持不变或变得更糟。
+> **讨论问题 6（5 额外分）**： 查看 `bpred_*` 基准测试的汇编源代码并解释为什么每个基准测试改进、保持不变或变得更糟。
 
-> **讨论问题 7（5 额外分）：** 你会如何改进 BTB 以改善 `bpred_bht` 的结果？
+> **讨论问题 7（5 额外分）**： 你会如何改进 BTB 以改善 `bpred_bht` 的结果？
 
 ------
 

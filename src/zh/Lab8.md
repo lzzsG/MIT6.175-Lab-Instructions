@@ -1,6 +1,6 @@
 # 实验 8: 具有异常处理的 RISC-V 处理器
 
-> **实验8截止日期：**11月25日星期五晚上11:59:59 EST。
+> **实验8截止日期**：11月25日星期五晚上11:59:59 EST。
 >
 > 你在实验8中的（极少量的）交付物包括：
 >
@@ -74,8 +74,8 @@
 命令：
 
 ```
-$ cd programs/benchmarks
-$ make -f Makefile.excep
+cd programs/benchmarks
+make -f Makefile.excep
 ```
 
 编译结果将出现在`programs/build/excep`文件夹中。（如果你忘记了，你会收到一个错误消息，如"ERROR: ../../programs/build/excep/vmh/median.riscv.vmh does not exit [sic], you need to first compile"。）
@@ -87,7 +87,7 @@ $ make -f Makefile.excep
 
 ## 实现异常
 
-> **练习1（40分）：**如上所述，在`ExcepProc.bsv`中的处理器上实现异常。你可以通过运行
+> **练习1（40分）**：如上所述，在`ExcepProc.bsv`中的处理器上实现异常。你可以通过运行
 >
 > ```
 > build -v excep
@@ -102,9 +102,9 @@ $ make -f Makefile.excep
 >
 > 你的处理器应该通过前三个脚本（`run_asm.sh`、`run_bmarks.sh`和`run_excep.sh`）中的所有测试，但应该在最后一个脚本（`run_permit.sh`）中报告错误并终止。注意，在运行`run_permit.sh`时看到`bsim_dut`输出的错误消息后，软件测试台`tb`仍在运行，因此你需要按`Ctrl-C`来终止它。
 
-> **讨论问题1（10分）：**在即将到来的感恩节假期的精神中，列举一些你感激只需在单周期处理器上做这个实验的理由。为了帮助你开始：如果你在处理流水线实现，异常会引入哪些新的危险？
+> **讨论问题1（10分）**：在即将到来的感恩节假期的精神中，列举一些你感激只需在单周期处理器上做这个实验的理由。为了帮助你开始：如果你在处理流水线实现，异常会引入哪些新的危险？
 
-> **讨论问题2（可选）：**你完成这个实验花了多长时间？
+> **讨论问题2（可选）**：你完成这个实验花了多长时间？
 
 完成后记得提交你的代码并`git push`。
 

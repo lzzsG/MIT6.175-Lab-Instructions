@@ -1,6 +1,6 @@
 # 实验 4: N 元 FIFOs
 
-> **实验 4 截止日期：** 2016年10月12日，星期三，晚上11:59:59 EDT。
+> **实验 4 截止日期**： 2016年10月12日，星期三，晚上11:59:59 EDT。
 >
 > 实验 4 的交付内容包括：
 >
@@ -95,7 +95,7 @@ FIFO 还将伴随入队和出队指针具有两个状态标志：`full` 和 `emp
 
 此 FIFO 将保持与课堂上介绍的以前的 FIFO 相同的接口。
 
-```rust
+```haskell
 interface Fifo#(numeric type n, type t);
   method Bool notFull;
   method Action enq(t x);
@@ -160,7 +160,7 @@ code generation for <module_name> starts
 
 首先，您将实现一个只使用寄存器的 N 元素 FIFO。这将导致 `enq` 和 `deq` 发生冲突，但它将为所有后续的 FIFO 设计提供一个起点。
 
-> **练习 1（5 分）：** 在 `MyFifo.bsv` 中实现 `mkMyConflictFifo`。您可以通过运行以下命令来构建和运行功能测试台
+> **练习 1（5 分）**： 在 `MyFifo.bsv` 中实现 `mkMyConflictFifo`。您可以通过运行以下命令来构建和运行功能测试台
 >
 > ```
 > $ make conflict
@@ -171,9 +171,9 @@ code generation for <module_name> starts
 
 现在我们已经有了一个初始的有冲突 FIFO，我们将看看它的冲突并构建它的冲突矩阵。
 
-> **讨论问题 1（5 分）：** 每个接口方法中都读取和写入了哪些寄存器？记住，守卫中进行的寄存器读取也算数。
+> **讨论问题 1（5 分）**： 每个接口方法中都读取和写入了哪些寄存器？记住，守卫中进行的寄存器读取也算数。
 
-> **讨论问题 2（5 分）：** 为 `mkMyConflictFifo` 填写冲突矩阵。为简化起见，将对同一寄存器的写入视为冲突（不仅仅是在单个规则内冲突）。
+> **讨论问题 2（5 分）**： 为 `mkMyConflictFifo` 填写冲突矩阵。为简化起见，将对同一寄存器的写入视为冲突（不仅仅是在单个规则内冲突）。
 
 ### 流水线和旁路 FIFOs
 
@@ -200,13 +200,13 @@ code generation for <module_name> starts
 
 例如，要获取调度注释
 
-```rust
+```haskell
 {notEmpty, first, deq} < {notFull, enq} < clear
 ```
 
 首先将阻止上述调度注释的寄存器替换为 EHRs。在这种情况下，包括 `enqP`, `deqP`, `full`, 和 `empty`。现在，分配 EHRs 的端口以匹配所需的调度。`{notEmpty, first, deq}` 都获得端口 0，`{notFull, enq}` 获得端口 1，而 `clear` 获得端口 2。你可以通过减少未使用端口的 EHRs 的大小来稍微优化这个设计，但这对于本实验室的目的并不必要。
 
-> **练习 2（10 分）：** 在 `MyFifo.bsv` 中使用上述方法和 EHRs 实现 `mkMyPipelineFifo` 和 `mkMyBypassFifo`。您可以通过运行以下命令来构建流水线 FIFO 和旁路 FIFO 的功能和调度测试台
+> **练习 2（10 分）**： 在 `MyFifo.bsv` 中使用上述方法和 EHRs 实现 `mkMyPipelineFifo` 和 `mkMyBypassFifo`。您可以通过运行以下命令来构建流水线 FIFO 和旁路 FIFO 的功能和调度测试台
 >
 > ```
 > $ make pipeline
@@ -236,7 +236,7 @@ code generation for <module_name> starts
 
 无冲突 FIFO 是最灵活的 FIFO。它可以放置在处理器流水线中，而不增加阶段之间的额外调度约束。无冲突 FIFO 的理想调度注释如下所示。
 
-```rust
+```haskell
 {notFull, enq} CF {notEmpty, first, deq}
 {notFull, enq, notEmpty, first, deq} < clear
 ```
@@ -263,7 +263,7 @@ BSV 没有强制规范化规则每个周期都触发的方法，但它可以在�
 
 这两个属性一起使用会断言只要你的显式守卫为真，规则就会触发。如果你的显式守卫是真（或为空），那么它就断言规则将在每个周期触发。下面是两个属性一起使用的例子：
 
-```rust
+```haskell
 (* no_implicit_conditions *)
 (* fire_when_enabled *)
 rule firesEveryCycle;
@@ -278,9 +278,9 @@ endrule
 
 如果规则 `fireEveryCycle` 实际上不能每个周期都触发，Bluespec 编译器将抛出错误。你应该将这些属性放在你的规范化规则之上，以确保它每个周期都触发。
 
-> **讨论问题 3（5 分）：** 使用 `mkMyConflictFifo` 的冲突矩阵，哪些冲突不符合上述无冲突 FIFO 的调度约束？
+> **讨论问题 3（5 分）**： 使用 `mkMyConflictFifo` 的冲突矩阵，哪些冲突不符合上述无冲突 FIFO 的调度约束？
 
-> **练习 3（30 分）：** 按照上述描述实现 `mkMyCFFifo`，但*不包括* clear 方法。您可以通过运行以下命令构建功能和调度测试台
+> **练习 3（30 分）**： 按照上述描述实现 `mkMyCFFifo`，但*不包括* clear 方法。您可以通过运行以下命令构建功能和调度测试台
 >
 > ```
 > $ make cfnc
@@ -308,7 +308,7 @@ BSV 没有强制规范化规则每个周期都触发的方法，但它可以在�
 
 这两个属性一起使用会断言只要你的显式守卫为真，规则就会触发。如果你的显式守卫是真（或为空），那么它就断言规则将在每个周期触发。下面是两个属性一起使用的例子：
 
-```rust
+```haskell
 (* no_implicit_conditions *)
 (* fire_when_enabled *)
 rule firesEveryCycle;
@@ -323,9 +323,9 @@ endrule
 
 如果规则 `fireEveryCycle` 实际上不能每个周期都触发，Bluespec 编译器将抛出错误。你应该将这些属性放在你的规范化规则之上，以确保它每个周期都触发。
 
-> **讨论问题 3（5 分）：** 使用 `mkMyConflictFifo` 的冲突矩阵，哪些冲突不符合上述无冲突 FIFO 的调度约束？
+> **讨论问题 3（5 分）**： 使用 `mkMyConflictFifo` 的冲突矩阵，哪些冲突不符合上述无冲突 FIFO 的调度约束？
 
-> **练习 3（30 分）：** 按照上述描述实现 `mkMyCFFifo`，但*不包括* clear 方法。您可以通过运行以下命令构建功能和调度测试台
+> **练习 3（30 分）**： 按照上述描述实现 `mkMyCFFifo`，但*不包括* clear 方法。您可以通过运行以下命令构建功能和调度测试台
 >
 > ```
 > $ make cfnc
@@ -345,7 +345,7 @@ endrule
 
 制这种调度约束。
 
-> **练习 4（10 分）：** 向 `mkMyCFFifo` 添加 `clear()` 方法。它应该在所有其他接口方法之后，并在规范化规则之前。您可以通过运行以下命令构建功能和调度测试台
+> **练习 4（10 分）**： 向 `mkMyCFFifo` 添加 `clear()` 方法。它应该在所有其他接口方法之后，并在规范化规则之前。您可以通过运行以下命令构建功能和调度测试台
 >
 > ```
 > $ make cf
@@ -356,11 +356,12 @@ endrule
 > ```
 > $ ./simCFFunctional
 > ```
+>
 > 来运行功能测试台。
 
-> **讨论问题 4（5 分）：** 在设计 `clear()` 方法时，您是如何强制执行调度约束 `{enq, deq} < clear` 的？
+> **讨论问题 4（5 分）**： 在设计 `clear()` 方法时，您是如何强制执行调度约束 `{enq, deq} < clear` 的？
 
-> **讨论问题 5（可选）：** 您花了多长时间完成这个实验室？
+> **讨论问题 5（可选）**： 您花了多长时间完成这个实验室？
 
 ------
 

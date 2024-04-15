@@ -1,6 +1,6 @@
 # 实验 1: 多路选择器和加法器
 
-> **实验 1 截止日期：** 2016年9月16日，星期五，晚上11:59:59 EDT。
+> **实验 1 截止日期**： 2016年9月16日，星期五，晚上11:59:59 EDT。
 >
 > 实验 1 的交付物包括：
 >
@@ -58,7 +58,7 @@
 
 构建我们的选择进位加法器的第一步是从门构建一个基本的多路选择器。让我们首先检查 `Multiplexer.bsv`。
 
-```rust
+```haskell
 function Bit#(1) multiplexer1(Bit#(1) sel, Bit#(1) a, Bit#(1) b);
     return (sel == 0)? a: b;
 endfunction
@@ -70,7 +70,7 @@ endfunction
 
 `return` 语句构成了整个函数，它接收两个输入并使用 `sel` 选择其中之一。`endfunction` 关键字完成了我们多路选择器函数的定义。你应该能够编译该模块。
 
-> **练习 1（4 分）：** 使用与门、或门和非门重新实现函数
+> **练习 1（4 分）**： 使用与门、或门和非门重新实现函数
 
  `multiplexer1` 在 `Multiplexer.bsv` 中。需要多少个门？（所需的函数分别称为 `and1`、`or1` 和 `not1`，在 `Multiplexers.bsv` 中提供。）
 
@@ -80,7 +80,7 @@ endfunction
 
 在 BSV 中，我们可以使用方括号 (`[]`) 索引更宽 `Bit` 类型中的单个位，例如 `bitVector[1]` 选择 `bitVector` 中的第二个最低有效位（`bitVector[0]` 选择最低有效位，因为 BSV 的索引从 0 开始）。我们可以使用 for 循环来复制许多具有相同形式的代码行。例如，要聚合 `and1` 函数形成一个 5 位 `and` 函数，我们可以写：
 
-```rust
+```haskell
 function Bit#(5) and5(Bit#(5) a, Bit#(5) b); Bit#(5) aggregate;
     for(Integer i = 0; i < 5; i = i + 1) begin
         aggregate[i] = and1(a[i], b[i]);
@@ -91,7 +91,7 @@ endfunction
 
 BSV 编译器在其静态展开阶段会用其完全展开的版本替换这个 for 循环。
 
-```rust
+```haskell
 aggregate[0] = and1(a[0], b[0]);
 aggregate[1] = and1(a[1], b[1]);
 aggregate[2] = and1(a[2], b[2]);
@@ -99,7 +99,7 @@ aggregate[3] = and1(a[3], b[3]);
 aggregate[4] = and1(a[4], b[4]);
 ```
 
-> **练习 2（1 分）：** 使用 for 循环和 `multiplexer1` 完成函数 `multiplexer5` 在 `Multiplexer.bsv` 中的实现。
+> **练习 2（1 分）**： 使用 for 循环和 `multiplexer1` 完成函数 `multiplexer5` 在 `Multiplexer.bsv` 中的实现。
 > 通过运行多路选择器测试台检查代码的正确性：
 >
 > ```
@@ -118,7 +118,7 @@ aggregate[4] = and1(a[4], b[4]);
 
 到目前为止，我们已经实现了两个版本的多路选择器函数，但可以想象需要一个 n 位多路选择器。如果我们不必完全重新实现多路选择器就能使用不同的宽度，那将是很好的。使用前一节中介绍的 for 循环，我们的多路选择器代码已经有些参数化，因为我们使用了常数大小和相同类型。我们可以通过使用 `typedef` 给多路选择器的大小起一个名字（`N`）来做得更好。我们的新多路选择器代码看起来像这样：
 
-```rust
+```haskell
 typedef 5 N;
 function Bit#(N) multiplexerN(Bit#(1) sel, Bit#(N) a, Bit#(N) b);
     // ...
@@ -133,14 +133,14 @@ typedef 使我们能够随意更改多路选择器的大小。`valueOf` 函数�
 
 真正的多态多路选择器可以从以下开始：
 
-```rust
+```haskell
 // typedef 32 N; // 不需要
 function Bit#(n) multiplexer n(Bit#(1) sel, Bit#(n) a, Bit#(n) b);
 ```
 
 变量 `n` 代表多路选择器的宽度，替换了具体值 `N`（=32）。在 BSV 中，*类型变量*（`n`）以小写字母开头，而具体类型（`N`）以大写字母开头。
 
-> **练习 3（2 分）：** 完成函数 `multiplexer_n` 的定义。通过将原始定义的 `multiplexer5` 只更改为：`return multiplexer_n(sel, a, b);` 来验证此函数的正确性。这种重新定义允许测试台在不修改的情况下测试你的新实现。
+> **练习 3（2 分）**： 完成函数 `multiplexer_n` 的定义。通过将原始定义的 `multiplexer5` 只更改为：`return multiplexer_n(sel, a, b);` 来验证此函数的正确性。这种重新定义允许测试台在不修改的情况下测试你的新实现。
 
 ## 在 BSV 中构建加法器
 
@@ -148,15 +148,15 @@ function Bit#(n) multiplexer n(Bit#(1) sel, Bit#(n) a, Bit#(n) b);
 
 可以通过将 4 个全加器连接在一起制作一个操作 4 位数的加法器，如图 2b 所示。这种加法器架构被称为行波进位加法器，因为进位链的结构。为了生成这种加法器而不写出每个显式的全加器，可以使用类似于 `multiplexer5` 的 for 循环。
 
-> **练习 4（2 分）：** 使用 for 循环正确连接所有使用 `fa_sum` 和 `fa_carry` 的代码来完成 `add4` 的代码。
+> **练习 4（2 分）**： 使用 for 循环正确连接所有使用 `fa_sum` 和 `fa_carry` 的代码来完成 `add4` 的代码。
 
 通过连接 4 位加法器，可以构建更大的加法器，就像通过连接全加器构建 4 位加法器一样。`Adders.bsv` 包含两个使用 add4 和连接电路构建的加法器模块：`mkRCAdder` 和 `mkCSAdder`。注意，与此点到的其他加法器不同，这些加法器是作为模块而不是函数实现的。这是一个微妙但重要的区别。在 BSV 中，函数由编译器自动内联，而模块必须使用 '`<-`' 符号显式实例化。如果我们将 8 位加法器制作成一个函数，使用它的 BSV 代码的多个位置将实例化多个加法器。通过将其制作成一个模块，多个来源可以使用相同的 8 位加法器。
 
 在模块 `mkRCAdder` 中包含了图 2d 所示的 8 位行波进位加法器的完整实现。可以通过运行以下命令进行测试：
 
 ```
-$ make rca
-$ ./simRca
+make rca
+./simRca
 ```
 
 由于 `mkRCAdder` 是通过组合 `add4` 实例构建的，运行 `./simRCA` 也将测试 `add4`。可以使用另一个测试台来查看单元的输出：
@@ -170,7 +170,7 @@ Simple
 
 还有一个 `mkCSAdder` 模块，旨在实现图 3 所示的选择进位加法器，但其实现未包含。
 
-> **练习 5（5 分）：** 在模块 `mkCSAdder` 中完成选择进位加法器的代码。使用图 3 作为所需硬件和连接的指南。可以通过运行以下命令测试此模块：
+> **练习 5（5 分）**： 在模块 `mkCSAdder` 中完成选择进位加法器的代码。使用图 3 作为所需硬件和连接的指南。可以通过运行以下命令测试此模块：
 >
 > ```
 > $ make csa

@@ -1,6 +1,6 @@
 # 实验 7: 带有 DRAM 和缓存的 RISC-V 处理器
 
-> **实验 7截止日期：** 2016年11月18日，美东时间晚上11:59:59。
+> **实验 7截止日期**： 2016年11月18日，美东时间晚上11:59:59。
 >
 > 你需要提交的实验 7内容包括：
 >
@@ -22,9 +22,9 @@
 以下是使用名为 `withoutcache` 的处理器来仿真 `simple.S` 和 `add.S` 组装测试的示例命令：
 
 ```
-$ cd scemi/sim
-$ ./withoutcache_dut > log.txt &
-$ ./tb ../../programs/build/assembly/vmh/simple.riscv.vmh ../../programs/build/assembly/vmh/add.riscv.vmh 
+cd scemi/sim
+./withoutcache_dut > log.txt &
+./tb ../../programs/build/assembly/vmh/simple.riscv.vmh ../../programs/build/assembly/vmh/add.riscv.vmh 
 ```
 
 这是样本输出：
@@ -46,8 +46,8 @@ SceMi 服务线程完成！
 我们还提供了两个脚本 `run_asm.sh` 和 `run_bmarks.sh` 来分别运行所有组装测试和基准测试。例如，我们可以使用以下命令测试处理器 `withoutcache`：
 
 ```
-$ ./run_asm.sh withoutcache
-$ ./run_bmarks.sh withoutcache
+./run_asm.sh withoutcache
+./run_bmarks.sh withoutcache
 ```
 
 BSV 的标准输出将分别重定向到 `asm.log` 和 `bmarks.log`。
@@ -58,7 +58,7 @@ BSV 的标准输出将分别重定向到 `asm.log` 和 `bmarks.log`。
 
 Sce-Mi 接口为我们生成了 DDR3 控制器，我们可以通过 `MemoryClient` 接口连接到它。本实验中为你提供的 typedef 使用了 BSV 的内存包中的类型（见 BSV 参考指南或 `$BLUESPECDIR/BSVSource/Misc/Memory.bsv` 的源代码）。以下是 `src/includes/MemTypes.bsv` 中与 DDR3 内存相关的一些 typedef：
 
-```rust
+```haskell
 typedef 24 DDR3AddrSize;
 typedef Bit#(DDR3AddrSize) DDR3Addr;
 typedef 512 DDR3DataSize;
@@ -113,7 +113,7 @@ DDR3 内存只对读取发送响应，就像 `FPGAMemory` 一样。内存响应�
 
 此示例代码提供在 `src/DDR3Example.bsv` 中。
 
-```rust
+```haskell
 import GetPut::*;
 import ClientServer::*;
 import Memory::*;
@@ -126,50 +126,50 @@ import Vector::*;
 
 (* synthesize *)
 module mkProc(Proc);
-	Ehr#(2, Addr)  pcReg <- mkEhr(?);
-	CsrFile         csrf <- mkCsrFile;
-	
-	// 其他处理器状态和组件
-	
-	// 接口 FIFO 到真实的 DDR3
-	Fifo#(2, DDR3_Req)  ddr3ReqFifo  <- mkCFFifo;
-	Fifo#(2, DDR3_Resp) ddr3RespFifo <- mkCFFifo;
-	// 初始化 DDR3 的模块
-	WideMemInitIfc       ddr3InitIfc <- mkWideMemInitDDR3( ddr3ReqFifo );
-	Bool memReady = ddr3InitIfc.done;
-	
-	// 将 DDR3 包装成 WideMem 接口
-	WideMem           wideMemWrapper <- mkWideMemFromDDR3( ddr3ReqFifo, ddr3RespFifo );
-	// 将 WideMem 接口分割为两个（多路复用方式使用）
-	// 这个分割器只在重置后生效（即 memReady && csrf.started）
-	// 否则 guard 可能失败，我们将获取到垃圾 DDR3 响应
-	Vector#(2, WideMem)     wideMems <- mkSplitWideMem( memReady && csrf.started, wideMemWrapper );
-	// 指令缓存应使用 wideMems[1]
-	// 数据缓存应使用 wideMems[0]
-	
-	// 在软重置期间，一些垃圾可能进入 ddr3RespFifo
-	// 这条规则将排空所有此类垃圾
-	rule drainMemResponses( !csrf.started );
-		ddr3RespFifo.deq;
-	endrule
-	
-	// 其他规则
-	
-	method ActionValue#(CpuToHostData) cpuToHost if(csrf.started);
-		let ret <- csrf.cpuToHost;
-		return ret;
-	endmethod
-	
-	// 将 ddr3RespFifo empty 添加到 guard 中，确保垃圾已被排空
-	method Action hostToCpu(Bit#(32) startpc) if ( !csrf.started && memReady && !ddr3RespFifo.notEmpty );
-		csrf.start(0); // 只有 1 个核心，id = 0
-		pcReg[0] <= startpc;
-	endmethod
-	
-	// 为测试台提供 DDR3 初始化的接口
-	interface WideMemInitIfc memInit = ddr3InitIfc;
-	// 接口到真实 DDR3 控制器
-	interface DDR3_Client ddr3client = toGPClient( ddr3ReqFifo, ddr3RespFifo );
+ Ehr#(2, Addr)  pcReg <- mkEhr(?);
+ CsrFile         csrf <- mkCsrFile;
+ 
+ // 其他处理器状态和组件
+ 
+ // 接口 FIFO 到真实的 DDR3
+ Fifo#(2, DDR3_Req)  ddr3ReqFifo  <- mkCFFifo;
+ Fifo#(2, DDR3_Resp) ddr3RespFifo <- mkCFFifo;
+ // 初始化 DDR3 的模块
+ WideMemInitIfc       ddr3InitIfc <- mkWideMemInitDDR3( ddr3ReqFifo );
+ Bool memReady = ddr3InitIfc.done;
+ 
+ // 将 DDR3 包装成 WideMem 接口
+ WideMem           wideMemWrapper <- mkWideMemFromDDR3( ddr3ReqFifo, ddr3RespFifo );
+ // 将 WideMem 接口分割为两个（多路复用方式使用）
+ // 这个分割器只在重置后生效（即 memReady && csrf.started）
+ // 否则 guard 可能失败，我们将获取到垃圾 DDR3 响应
+ Vector#(2, WideMem)     wideMems <- mkSplitWideMem( memReady && csrf.started, wideMemWrapper );
+ // 指令缓存应使用 wideMems[1]
+ // 数据缓存应使用 wideMems[0]
+ 
+ // 在软重置期间，一些垃圾可能进入 ddr3RespFifo
+ // 这条规则将排空所有此类垃圾
+ rule drainMemResponses( !csrf.started );
+  ddr3RespFifo.deq;
+ endrule
+ 
+ // 其他规则
+ 
+ method ActionValue#(CpuToHostData) cpuToHost if(csrf.started);
+  let ret <- csrf.cpuToHost;
+  return ret;
+ endmethod
+ 
+ // 将 ddr3RespFifo empty 添加到 guard 中，确保垃圾已被排空
+ method Action hostToCpu(Bit#(32) startpc) if ( !csrf.started && memReady && !ddr3RespFifo.notEmpty );
+  csrf.start(0); // 只有 1 个核心，id = 0
+  pcReg[0] <= startpc;
+ endmethod
+ 
+ // 为测试台提供 DDR3 初始化的接口
+ interface WideMemInitIfc memInit = ddr3InitIfc;
+ // 接口到真实 DDR3 控制器
+ interface DDR3_Client ddr3client = toGPClient( ddr3ReqFifo, ddr3RespFifo );
 endmodule
 ```
 
@@ -187,7 +187,7 @@ endmodule
 
 如前所述，你将在启动每个新测试前对处理器状态进行软重置。在软重置期间，由于某些跨时钟域问题，一些垃圾数据可能会入队到 `ddr3RespFifo` 中。为了处理这个问题，我们添加了 `drainMemResponses` 规则来排空垃圾数据，并在 `hostToCpu` 方法的保护条件中添加了检查 `drainMemResponses` 是否为空的条件。
 
-> **建议：**在每个管道阶段的规则中添加 `csrf.started` 到 guard 中。这可以防止在处理器启动之前 DRAM 被访问。
+> **建议**：在每个管道阶段的规则中添加 `csrf.started` 到 guard 中。这可以防止在处理器启动之前 DRAM 被访问。
 
 ## 从前一个实验室迁移代码
 
@@ -273,14 +273,14 @@ Proc 接口现在只有单一的内存初始化接口，以匹配统一的 DDR3 
 
 通过添加对 DDR3 内存的支持，你的处理器现在可以运行比我们一直在使用的小基准测试更大的程序。不幸的是，这些大型程序需要更长的运行时间，在许多情况下，模拟完成需要太长时间。现在是尝试 FPGA 合成的好时机。通过在 FPGA 上实现你的处理器，由于设计在硬件而非软件中运行，你将能够更快地运行这些大型程序。
 
-> **练习 3 (0 分，但你仍然应该做这个)：** 在为 FPGA 合成之前，让我们试试看一个在模拟中运行时间很长的程序。程序 `./run_mandelbrot.sh` 运行一个基准测试，使用 1 和 0 打印曼德博集合的方形图像。运行此基准测试以查看它在实时中的运行速度有多慢。请不要等待此基准测试完成，可以使用 Ctrl-C 提前终止。
+> **练习 3 (0 分，但你仍然应该做这个)**： 在为 FPGA 合成之前，让我们试试看一个在模拟中运行时间很长的程序。程序 `./run_mandelbrot.sh` 运行一个基准测试，使用 1 和 0 打印曼德博集合的方形图像。运行此基准测试以查看它在实时中的运行速度有多慢。请不要等待此基准测试完成，可以使用 Ctrl-C 提前终止。
 
 ### 为 FPGA 合成
 
 你可以通过进入 `scemi/fpga_vc707` 文件夹并执行以下命令开始为 `WithCache.bsv` 进行 FPGA 合成：
 
 ```
-$ vivado_setup build -v
+vivado_setup build -v
 ```
 
 这个命令将需要很长时间（大约一小时）并消耗大量计算资源。你可能想选择一个负载较轻的 vlsifarm 服务器。你可以使用 `w` 查看有多少人登录，并可以使用 `top` 或 `uptime` 查看正在使用的资源。
@@ -297,7 +297,7 @@ $ vivado_setup build -v
 
 完成后，请提交你的代码并执行 `git push`。
 
-> **来自你友好的助教的提示：** 如果你在 FPGA 测试中遇到任何问题，请尽快通过电子邮件通知我。基础设施并不非常稳定，但及早通知我有关任何问题将使它们更快得到解决。
+> **来自你友好的助教的提示**： 如果你在 FPGA 测试中遇到任何问题，请尽快通过电子邮件通知我。基础设施并不非常稳定，但及早通知我有关任何问题将使它们更快得到解决。
 
 > **值得关注的内容：（添加于 11 月 17 日）** 让我们分
 
