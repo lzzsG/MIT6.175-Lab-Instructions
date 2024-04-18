@@ -1,9 +1,11 @@
 # Summary
-[MIT-6.175](./MIT6.175.md)
+
 ---
+
 # 中文
 
 # 实验课程
+
 - [MIT-6.175 简介/目录](./zh/MIT6.175.md)
 - [实验 0: 入门](./zh/Lab0.md)
 - [实验 1: 多路选择器和加法器](./zh/Lab1.md)
@@ -21,9 +23,11 @@
 - [项目2: 缓存一致性](./zh/project2.md)
 
 ---
+
 # 原文
 
 # Lab Assignments
+
 - [MIT-6.175 Introduction/Contents](./en/MIT6.175.md)
 - [Lab 0: Getting Started](./en/Lab0.md)
 - [Lab 1: Multiplexers and Adders](./en/Lab1.md)
