@@ -11,6 +11,3 @@ mathjax-support = true
 preferred-dark-theme = "black"
 git-repository-url = "https://github.com/lzzsG/mit6.175-labs-instruction"
 git-repository-icon = "fa-github"
-
-[output.html.redirect]
-"/" = "https://lzzs.fun/mit6.175-labs-instruction/zh/MIT6.175.html"
