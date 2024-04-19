@@ -20,8 +20,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#ffffff">
 
-    <meta http-equiv="refresh" content="0; url=https://lzzs.fun/mit6.175-labs-instruction/zh/MIT6.175.html">
-
     {{#if favicon_svg}}
     <link rel="icon" href="{{ path_to_root }}favicon.svg">
     {{/if}}
@@ -229,8 +227,15 @@
                                 // 获取当前的 URL
                                 var currentUrl = window.location.href;
 
+                                // 特殊的根目录 URL 检查
+                                const rootUrl = "https://lzzs.fun/mit6.175-labs-instruction";
+                                const rootUrlWithSlash = rootUrl + "/";
+
                                 // 检测当前语言并切换
-                                if (currentUrl.includes('/zh/')) {
+                                if (currentUrl === rootUrl || currentUrl === rootUrlWithSlash) {
+                                    // 如果当前是特定的根目录，直接重定向到英文页面
+                                    window.location.href = rootUrl + "/en/MIT6.175.html";
+                                } else if (currentUrl.includes('/zh/')) {
                                     window.location.href = currentUrl.replace('/zh/', '/en/');
                                     document.getElementById('languageLabel').innerText = 'English';
                                 } else {
@@ -246,6 +251,7 @@
                                 document.getElementById('languageLabel').innerText = label;
                             }
                         </script>
+
 
 
 
