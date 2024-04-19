@@ -1,9 +1,9 @@
 [book]
 authors = ["lzzsG"]
-language = "en"
+language = "zh"
 multilingual = true
 src = "src"
-title = "mit6.175-labs-instruction"
+title = "MIT6.175 Labs Instruction"
 
 [output.html]
 default-theme = "black"
