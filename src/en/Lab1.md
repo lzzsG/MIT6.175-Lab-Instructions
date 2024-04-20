@@ -6,7 +6,6 @@
 >
 > - your answers to Exercises 1-5, in `Multiplexer.bsv` and `Adders.bsv`, and
 > - your answers to the discussion questions in `discussion.txt`.
->
 
 ## Introduction
 
@@ -18,9 +17,9 @@ This lab is used as an introduction to simple combinational circuits and Bluespe
 
 Multiplexers (or *muxes* for short) are blocks that select between multiple signals. A multiplexer has multiple data inputs `inN`, a select input `sel`, and a single output `out`. The value of `sel` determines which input is shown on the output. The muxes in this lab are all 2-way muxes. That means there will be two inputs to select between (`in0` and `in1`) and `sel` will be a single bit. If `sel` is 0, then `out` = `in0`. If `sel` is 1, then `out` = `in1`. Figure 1a shows the symbol used for a mux, and figure 1b shows pictorially the function of a mux.
 
-| ![Multiplexer symbol](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/mux.png) | ![Multiplexer functionality](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/mux-sel.png) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| (a) Multiplexer symbol                                       | (b) Multiplexer functionality                                |
+| ![Multiplexer symbol](./assets/mux.png) | ![Multiplexer functionality](./assets/mux-sel.png) |
+| --------------------------------------- | -------------------------------------------------- |
+| (a) Multiplexer symbol                  | (b) Multiplexer functionality                      |
 
 Figure 1: Symbol and functionality of 1-bit multiplexer
 
@@ -32,17 +31,17 @@ The adder architectures we are going to explore are the ripple-carry adder and t
 
 The carry-select adder adds prediction or speculation to the ripple-carry adder to speed up execution. It computes the bottom bits the same way the ripple-carry adder computes them, but it differs in the way it computes the top bits. Instead of waiting for the carry signal from the lower bits to be computed, it computes two possible results for the top bits: one results assumes there is no carry from the lower bits and the other assumes there is a bit carried over. Once that carry bit is calculated, a mux selects the top bits that correspond to the carry bit. An 8-bit carry-select adder can be seen in figure 3.
 
-| ![Full adder](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/full-adder.png) | ![4-bit ripple-carry adder built from full adders](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/ripple-carry.png) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| (a) Full adder                                               | (b) 4-bit ripple-carry adder built from full adders          |
+| ![Full adder](./assets/full-adder.png) | ![4-bit ripple-carry adder built from full adders](./assets/ripple-carry.png) |
+| -------------------------------------- | ------------------------------------------------------------ |
+| (a) Full adder                         | (b) 4-bit ripple-carry adder built from full adders          |
 
-| ![Symbol for 4-bit adder](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/full-adder-symbol.png) | ![8-bit ripple-carry adder](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/8-bit-ripple-carry.png) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| (c) Symbol for 4-bit adder                                   | (d) 8-bit ripple-carry adder|
+| ![Symbol for 4-bit adder](./assets/full-adder-symbol.png) | ![8-bit ripple-carry adder](./assets/8-bit-ripple-carry.png) |
+| --------------------------------------------------------- | ------------------------------------------------------------ |
+| (c) Symbol for 4-bit adder                                | (d) 8-bit ripple-carry adder                                 |
 
 Figure 2: Construction of a 4-bit adder and an 8-bit adder from full adder blocks
 
-| ![8-bit carry-select adder](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab1/8-bit-carry-select.png) |
+| ![8-bit carry-select adder](./assets/8-bit-carry-select.png) |
 | ------------------------------------------------------------ |
 
 Figure 3: 8-bit carry-select adder 
@@ -98,11 +97,14 @@ aggregate[4] = and1(a[4], b[4]);
 
 > **Exercise 2 (1 Point):** Complete the implementation of the function > `multiplexer5` in `Multiplexer.bsv` using for loops and `multiplexer1`.
 > Check the correctness of the code by running the multiplexer testbench:
+>
 > ```
 > $ make mux
 > $ ./simMux
 > ```
+>
 > An alternate test bench can be used to see outputs from the unit by running:
+>
 > ```
 > $ make muxsimple
 > $ ./simMuxSimple
@@ -161,11 +163,14 @@ $ ./simRcaSimple
 There is also a `mkCSAdder` module that is intended to implement the carry-select adder shown in Figure 3, but its implementation is not included.
 
 > **Exercise 5 (5 Points):** Complete the code for the carry-select adder in the module `mkCSAdder`. Use Figure 3 as a guide for the required hardware and connections. This module can be tested by running the following:
+>
 > ```
 > $ make csa
 > $ ./simCsa
 > ```
+>
 > An alternate test bench can be used to see outputs from the unit by running:
+>
 > ```
 > $ make csasimple
 > $ ./simCsaSimple
@@ -174,6 +179,7 @@ There is also a `mkCSAdder` module that is intended to implement the carry-selec
 ## Discussion Questions
 
 > Write your answers to these questions in the text file `discussion.txt` provided with the initial lab code.
+>
 > 1. How many gates does your one-bit multiplexer use? The 5-bit multiplexer? Write down a formula for the number of gates in an N-bit multiplexer. **(2 Points)**
 > 2. Assume a single full adder requires 5 gates. How many gates does the 8-bit ripple-carry adder require? How many gates does the 8-bit carry-select adder require? **(2 Points)**
 > 3. Assume a single full adder requires A time unit to compute its outputs once all its inputs are valid and a mux requires M time unit to compute its output. In terms of A and M, how long does the 8-bit ripple-carry adder take? How long does the 8-bit carry-select adder take? **(2 Points)**

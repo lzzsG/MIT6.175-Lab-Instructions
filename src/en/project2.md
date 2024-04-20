@@ -6,7 +6,7 @@
 
 In this part of the project, we will implement a multicore system shown in Figure 1 in simulation. The system consists of two cores, and each core has its own private caches. The data caches (D caches) and main memory are kept coherent using the MSI protocol introduced in class. Since we don't have self-modifying programs, the instruction caches (I caches) can directly access the memory without going through any coherent transactions.
 
-| ![Multicore system architecture](http://csg.csail.mit.edu/6.175/archive/2016/labs/proj2/system.png) |
+| ![image-20240420194435640](./assets/image-20240420194435640.png) |
 | ------------------------------------------------------------ |
 | Figure 1: Multicore system                                   |
 
@@ -62,7 +62,7 @@ The interface has two enqueue methods (`enq_resp` and `enq_req`), one for reques
 
 As mentioned in the class, a request should never block a response when they both sit in the same message FIFO. To ensure this point, we could implement the message FIFO using two FIFOs as shown in Figure 2. At the enqueue port, requests are all enqueued into a request FIFO, while responses are all enqueued into another response FIFO. At the dequeue port, response FIFO has priority over request FIFO, i.e. the `deq` method should dequeue the response FIFO as long as the response FIFO is not empty. The numeric type `n` in the interface definition is the size of the response/request FIFO.
 
-| ![Structure of a message FIFO](http://csg.csail.mit.edu/6.175/archive/2016/labs/proj2/msg_fifo.png) |
+| ![image-20240420194637741](./assets/image-20240420194637741.png) |
 | ------------------------------------------------------------ |
 | Figure 2: Structure of a message FIFO                        |
 

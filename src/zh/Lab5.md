@@ -44,7 +44,7 @@
 
 ### SceMi 设置
 
-| ![SceMi 设置](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab5/setup.svg) |
+| ![image-20240420194355387](./assets/image-20240420194355387.png) |
 | ------------------------------------------------------------ |
 | 图 1: SceMi 设置                                             |
 

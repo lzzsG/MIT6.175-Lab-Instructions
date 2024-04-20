@@ -44,7 +44,7 @@ Within the BSV source folder, there is a folder `src/includes/` which contains t
 
 ### The SceMi setup
 
-| ![SceMi Setup](http://csg.csail.mit.edu/6.175/archive/2016/labs/lab5/setup.svg) |
+| ![image-20240420194346284](./assets/image-20240420194346284.png) |
 | ------------------------------------------------------------ |
 | Figure 1: SceMi Setup                                        |
 
